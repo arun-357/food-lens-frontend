@@ -28,7 +28,7 @@ const FoodDisplay: React.FC<FoodDisplayProps> = ({ data }) => {
       {/* Image Box */}
       <div className="relative bg-bento-light dark:bg-bento-dark rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300 border-2 border-green-200 dark:border-green-800 h-64 sm:h-80">
             <img
-            src={data.imageUrl}
+            src={imgSrc}
             alt={data.name.toUpperCase()}
             loading="lazy"
             className="w-full h-full object-cover rounded-2xl"
