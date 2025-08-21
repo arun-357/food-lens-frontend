@@ -30,7 +30,6 @@ const FoodDisplay: React.FC<FoodDisplayProps> = ({ data }) => {
             <img
             src={imgSrc}
             alt={data.name.toUpperCase()}
-            loading="lazy"
             className="w-full h-full object-cover rounded-2xl"
             onError={() => {
               if (isRemote) setImgSrc(fallbackImg);
