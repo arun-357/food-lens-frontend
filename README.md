@@ -1,69 +1,118 @@
-# React + TypeScript + Vite
+# Food Lens — Frontend (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Food Lens is a full-stack application: a React + TypeScript + Vite frontend talking to a Java Spring Boot backend. Search a dish and instantly see a concise description, ingredients, and potential benefits.
 
-Currently, two official plugins are available:
+Note: This is a demo project. If the backend is on a free tier, cold starts can make the first request take 30–60 seconds.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Links
+- Live project: https://food-lens-frontend.onrender.com/
+- Backend repository: https://github.com/arun-357/food-lens-backend
+- Frontend stack: React 19, TypeScript 5, Vite 7, Tailwind CSS 4, Axios, React Markdown, Lucide icons
 
-## Expanding the ESLint configuration
+## Features
+- Search foods by name and view:
+  - Description
+  - Ingredients
+  - Benefits
+- Authentication (register/login) with JWT
+- Usage history (per authenticated user)
+- Light/Dark mode (auto-detected, toggleable)
+- Robust image handling:
+  - Local placeholder image for demo
+  - Fallback image if remote URLs expire (24h links)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Quick Start
+Prerequisites: Node.js 20+, npm
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Install dependencies
+```bash
+npm ci
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Configure environment
+Create a file named `.env` in the project root:
+```bash
+# Base URL of the backend API (Spring Boot service)
+VITE_API_URL=https://your-api.onrender.com
 ```
+
+3. Run locally
+```bash
+npm run dev
+```
+The app runs on http://localhost:5173 by default.
+
+4. Build and preview
+```bash
+npm run build
+npm run preview
+```
+
+## Deployment (Render — Static Site)
+- Build Command: `npm ci && npm run build`
+- Publish Directory: `dist`
+- Environment Variables:
+  - `VITE_API_URL=https://your-api.onrender.com`
+- SPA Rewrites (Settings → Redirects/Rewrites):
+  - Source: `/*` → Destination: `/index.html` (Action: Rewrite)
+
+If you see CORS errors, allow your frontend origin on the backend (see Backend Integration below).
+
+## Backend Integration
+The frontend expects these endpoints from the backend (see `src/contexts/AuthContext.tsx` and `src/components/SearchBar.tsx`):
+- `POST /auth/login` → returns `{ accessToken: string }`
+- `POST /auth/register`
+- `GET /food/search?name=<query>` → returns
+  ```ts
+  interface FoodData {
+    id?: number;
+    name: string;
+    description: string | null;
+    ingredients: string;
+    benefits: string;
+    imageUrl: string; // may be a temporary URL
+  }
+  ```
+The base URL is read from `import.meta.env.VITE_API_URL`.
+
+CORS: Configure the Spring Boot backend to allow your Render static-site origin, and return `Access-Control-Allow-Origin` with that exact origin. If using cookies, also set `Access-Control-Allow-Credentials: true` and cookie attributes `SameSite=None; Secure`. This project uses JWT via `Authorization: Bearer <token>`.
+
+## Project Structure
+```
+├─ public/
+├─ src/
+│  ├─ components/
+│  │  ├─ SearchBar.tsx          # Search UI with loading spinner
+│  │  ├─ FoodDisplay.tsx        # Renders markdown and resilient image (fallback)
+│  │  ├─ LoginModal.tsx         # Login with loading state
+│  │  ├─ RegisterModal.tsx      # Register with loading state
+│  │  ├─ HistoryModal.tsx       # Usage history
+│  │  ├─ ErrorModal.tsx         # Error toast/modal
+│  │  └─ SuccessModal.tsx       # Success feedback
+│  ├─ contexts/
+│  │  └─ AuthContext.tsx        # Axios baseURL, JWT handling, usage counter
+│  ├─ assets/                   # Placeholder/fallback images
+│  ├─ App.tsx                   # Layout, theme, placeholder view (demo)
+│  └─ main.tsx
+├─ vite.config.ts
+├─ tailwind.config.ts
+└─ package.json
+```
+
+## Configuration
+- Environment variables
+  - `VITE_API_URL` (required): Backend API base URL.
+- The app auto-detects dark mode and includes a toggle.
+
+## Scripts
+- `npm run dev` — start dev server
+- `npm run build` — type-check and build for production
+- `npm run preview` — preview production build
+- `npm run lint` — lint the codebase
+
+## Notes on Images
+- The placeholder demo image is bundled locally and never expires.
+- For real results, remote image URLs may expire in ~24 hours; `FoodDisplay` swaps to a local fallback when a 404/error occurs.
+
+## License
+This repository has no explicit license. Add one if you intend others to use it.
