@@ -121,10 +121,6 @@ const App: React.FC = () => {
               Login to search for foods and view details. Here's an example:
             </p>
             <FoodDisplay data={placeholderData} />
-            {/* Footer */}
-            <p className="mt-8 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-              This is a demo project. Backend on free tier may cold start; first request can take 30–60 seconds.
-            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
