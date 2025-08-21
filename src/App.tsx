@@ -64,7 +64,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center p-4 sm:p-6 transition-colors duration-500">
+    <div className="min-h-svh bg-gradient-to-br from-green-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 flex flex-col items-center p-3 sm:p-6 transition-colors duration-500">
       <header className="w-full max-w-5xl flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-green-800 dark:text-green-300 mb-4 sm:mb-0 tracking-tight">
           Food Lens
