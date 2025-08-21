@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import fallbackImg from '../assets/fallback.png';
 
 interface FoodData {
   id?: number;
@@ -15,6 +16,13 @@ interface FoodDisplayProps {
 }
 
 const FoodDisplay: React.FC<FoodDisplayProps> = ({ data }) => {
+  const [imgSrc, setImgSrc] = useState<string>(data.imageUrl);
+  const isRemote = /^https?:\/\//i.test(data.imageUrl);
+
+  useEffect(() => {
+    setImgSrc(data.imageUrl);
+  }, [data.imageUrl]);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 w-full max-w-4xl mx-auto h-[22rem] items-center justify-center">
       {/* Image Box */}
@@ -22,7 +30,11 @@ const FoodDisplay: React.FC<FoodDisplayProps> = ({ data }) => {
             <img
             src={data.imageUrl}
             alt={data.name.toUpperCase()}
+            loading="lazy"
             className="w-full h-full object-cover rounded-2xl"
+            onError={() => {
+              if (isRemote) setImgSrc(fallbackImg);
+            }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500">
             <span className="text-white font-extrabold text-lg sm:text-2xl tracking-wide">{data.name}</span>

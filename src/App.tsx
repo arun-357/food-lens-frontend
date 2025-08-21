@@ -8,6 +8,7 @@ import ErrorModal from './components/ErrorModal';
 import SuccessModal from './components/SuccessModal';
 import FoodDisplay from './components/FoodDisplay';
 import SearchBar from './components/SearchBar';
+import placeholderImg from './assets/placeholder.jpg';
 
 interface FoodData {
   id?: number;
@@ -23,7 +24,7 @@ const placeholderData: FoodData = {
   description: 'Idli is a savory rice cake, originating from South India, popular as a breakfast food.',
   ingredients: 'Rice, Urad dal (black lentils), Fenugreek seeds, Salt, Water',
   benefits: 'Steamed (low oil), Easy to digest, Good source of carbohydrates and protein, Gluten-free (typically)',
-  imageUrl: 'https://pixabay.com/get/g27982c3d834652a29abd8d378f53f524f1a3ad7956838de0f03452d4b39ea24004bb461d722b016071477187405e82a16b96b1df04e82d82f4722c539a26a529_640.jpg',
+  imageUrl: placeholderImg,
 };
 
 const App: React.FC = () => {
@@ -120,6 +121,10 @@ const App: React.FC = () => {
               Login to search for foods and view details. Here's an example:
             </p>
             <FoodDisplay data={placeholderData} />
+            {/* Footer */}
+            <p className="mt-8 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+              This is a demo project. Backend on free tier may cold start; first request can take 30–60 seconds.
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
